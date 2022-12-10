@@ -1,6 +1,15 @@
 use std::collections::HashMap;
-use std::fmt::{Debug, Display};
+use std::fmt::{Debug, Display, Formatter};
 
+pub struct Marker {
+    pub visited: bool,
+}
+
+impl Display for Marker {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", if self.visited { "#" } else { "." })
+    }
+}
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
 pub struct Pos {

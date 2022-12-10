@@ -1,9 +1,8 @@
 extern crate core;
 
 use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
 use std::fs;
-use common::{Pos, print_map};
+use common::{Marker, Pos, print_map};
 
 fn main() {
     assert_eq!(13, solve1("test1"));
@@ -36,7 +35,7 @@ fn solve2(filename: &str) -> usize {
 }
 
 fn solve(s: String, mut knots: Vec<Pos>) -> usize {
-    let mut map: HashMap<Pos, TailVisit> = HashMap::new();
+    let mut map: HashMap<Pos, Marker> = HashMap::new();
 
     for line in s.lines() {
         let (direction, count) = line.split_once(" ").expect("bad data");
@@ -55,18 +54,8 @@ fn solve(s: String, mut knots: Vec<Pos>) -> usize {
     map.len()
 }
 
-struct TailVisit {
-    visited: bool,
-}
-
-impl Display for TailVisit {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", if self.visited { "#" } else { "." })
-    }
-}
-
 fn steps(
-    map: &mut HashMap<Pos, TailVisit>,
+    map: &mut HashMap<Pos, Marker>,
     count: u32,
     mut knots: Vec<Pos>,
     f_next: fn(&Pos) -> Pos,
@@ -82,7 +71,7 @@ fn steps(
             new_knots.push(new_tail);
             prev_knot = new_tail;
         }
-        map.insert(prev_knot.clone(), TailVisit { visited: true });
+        map.insert(prev_knot.clone(), Marker { visited: true });
         knots = new_knots;
 
         // print_map(&map);
