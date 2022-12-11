@@ -15,10 +15,7 @@ fn main() {
 fn solve1(filename: &str) -> usize {
     let s = fs::read_to_string(filename).expect("bad input");
 
-    let mut knots = Vec::new();
-    for _ in 0..2 {
-        knots.push(Pos { row: 0, col: 0 });
-    }
+    let knots = vec![Pos { row: 0, col: 0 }; 2];
 
     solve(s, knots)
 }
@@ -26,10 +23,7 @@ fn solve1(filename: &str) -> usize {
 fn solve2(filename: &str) -> usize {
     let s = fs::read_to_string(filename).expect("bad input");
 
-    let mut knots = Vec::new();
-    for _ in 0..10 {
-        knots.push(Pos { row: 0, col: 0 });
-    }
+    let knots = vec![Pos { row: 0, col: 0 }; 10];
 
     solve(s, knots)
 }
