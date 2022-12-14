@@ -41,6 +41,7 @@ impl Pos {
     }
 }
 
+#[derive(Debug)]
 pub struct Size {
     pub min_row: i32,
     pub max_row: i32,
