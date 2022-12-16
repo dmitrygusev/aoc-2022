@@ -68,7 +68,7 @@ pub fn print_map<T>(map: &HashMap<Pos, T>) where T: Display {
             };
             print!("{} ", str);
         }
-        println!();
+        println!(" {}", row);
     }
     println!("---");
 }
