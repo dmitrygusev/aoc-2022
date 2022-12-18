@@ -1,5 +1,7 @@
 use std::collections::{HashMap, HashSet};
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{Debug, Display, Formatter, Write};
+use std::fs::File;
+use std::io::Write as IoWrite;
 
 pub struct Marker {
     pub visited: bool,
@@ -77,6 +79,12 @@ pub fn print_map<T>(map: &HashMap<Pos, T>) where T: Display {
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct NodeId(String);
+
+impl Display for NodeId {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 impl NodeId {
     pub fn from(s: &str) -> NodeId {
@@ -166,4 +174,96 @@ impl<NA> Graph<NA> where NA: Clone {
             edges_from: HashMap::new(),
         }
     }
+}
+
+pub fn print_graph_dot<NA>(graph: &Graph<NA>) where NA: Display, NA: Clone {
+    let buf = build_graph_dot(graph);
+    println!("{}", buf);
+}
+
+pub fn create_dot_file<NA>(graph: &Graph<NA>, filename: &str) where NA: Display, NA: Clone {
+    let buf = build_graph_dot(graph);
+    let mut file = File::create(filename).unwrap();
+    write!(file, "{}", buf);
+}
+
+fn build_graph_dot<NA>(graph: &Graph<NA>)  -> String where NA: Display, NA: Clone {
+    let mut buf = String::new();
+    writeln!(buf, "digraph G {{");
+    for node_id in graph.nodes.iter() {
+        let attr = match graph.node_attributes.get(node_id) {
+            Some(state) => state.to_string(),
+            None => String::from("")
+        };
+        write!(buf, "  {0} [label=\"{0}, {1}\"{2}]\n", node_id, attr,
+               if attr.contains("rate=0") {""} else {",fillcolor=\"green\",style=\"filled\",fontcolor=\"white\""});
+        if let Some(to_nodes) = graph.edges_from.get(node_id) {
+            if !to_nodes.is_empty() {
+                write!(buf, "  {} -> {{", node_id);
+                write_node_ids(&mut buf, to_nodes);
+                writeln!(buf, "}}");
+            }
+        }
+    }
+    write!(buf, "}}");
+    buf
+}
+
+fn write_node_ids(buf: &mut String, nodes: &HashSet<NodeId>) {
+    let mut first = true;
+    for node_id in nodes.iter() {
+        if first {
+            first = false;
+        } else if nodes.len() > 1 {
+            write!(buf, "; ").unwrap();
+        }
+        write!(buf, "{}", node_id);
+    }
+}
+
+pub type Dist = HashMap<NodeId, u32>;
+pub type Prev = HashMap<NodeId, NodeId>;
+
+pub fn dijkstra<NA>(graph: &Graph<NA>, start: &NodeId) -> (Dist, Prev) where NA: Clone
+{
+    let mut dist = HashMap::new();
+    let mut prev = HashMap::new();
+    let mut queue = Vec::new();
+
+    for node_id in graph.nodes.iter() {
+        dist.insert(node_id.clone(), u32::MAX);
+        queue.push(node_id.clone());
+    }
+
+    dist.insert(start.clone(), 0);
+
+    while !queue.is_empty() {
+        let min_index = queue.iter()
+            .enumerate()
+            .min_by(|(_, a), (_, b)| dist[a].cmp(&dist[b]))
+            .map(|(index, _)| index)
+            .unwrap();
+
+        let u = queue.remove(min_index);
+
+        for d in graph.edges_to[&u].iter() {
+            if !queue.contains(&d) { continue; }
+            let alt = dist[&u] + 1;
+            if alt < dist[&d] {
+                dist.insert(d.clone(), alt);
+                prev.insert(d.clone(), u.clone());
+            }
+        }
+    }
+
+    (dist, prev)
+}
+
+pub fn get_path(prev: &Prev, from: &NodeId) -> Vec<NodeId> {
+    let mut path = Vec::new();
+    path.push(from.clone());
+    while prev.contains_key(&path.last().unwrap()) {
+        path.push(prev[path.last().unwrap()].clone());
+    }
+    path
 }

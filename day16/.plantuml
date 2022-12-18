@@ -1,0 +1,7 @@
+@startuml
+!include ./test1.dot
+@enduml
+
+@startuml
+!include ./input1.dot
+@enduml

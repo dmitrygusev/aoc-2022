@@ -1,0 +1,22 @@
+digraph G {
+  AA [label="AA, rate=0"]
+  AA -> {DD; BB; II}
+  CC [label="CC, rate=2",fillcolor="green",style="filled",fontcolor="white"]
+  CC -> {DD; BB}
+  DD [label="DD, rate=20",fillcolor="green",style="filled",fontcolor="white"]
+  DD -> {AA; EE; CC}
+  FF [label="FF, rate=0"]
+  FF -> {GG; EE}
+  HH [label="HH, rate=22",fillcolor="green",style="filled",fontcolor="white"]
+  HH -> {GG}
+  II [label="II, rate=0"]
+  II -> {JJ; AA}
+  BB [label="BB, rate=13",fillcolor="green",style="filled",fontcolor="white"]
+  BB -> {CC; AA}
+  GG [label="GG, rate=0"]
+  GG -> {FF; HH}
+  JJ [label="JJ, rate=21",fillcolor="green",style="filled",fontcolor="white"]
+  JJ -> {II}
+  EE [label="EE, rate=3",fillcolor="green",style="filled",fontcolor="white"]
+  EE -> {DD; FF}
+}

@@ -1,6 +1,4 @@
 use std::fs;
-use std::collections::{HashMap, HashSet};
-use std::hash::Hash;
 use common::{Graph, NodeId};
 use crate::NodeAttr::{Dir, File};
 

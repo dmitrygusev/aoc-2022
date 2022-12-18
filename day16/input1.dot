@@ -1,0 +1,124 @@
+digraph G {
+  KW [label="KW, rate=0"]
+  KW -> {RE; IY}
+  RT [label="RT, rate=0"]
+  RT -> {EN; LZ}
+  HW [label="HW, rate=0"]
+  HW -> {JF; CY}
+  YV [label="YV, rate=6",fillcolor="green",style="filled",fontcolor="white"]
+  YV -> {YX; TT; VL; NH; UC}
+  TE [label="TE, rate=0"]
+  TE -> {HE; XF}
+  RE [label="RE, rate=4",fillcolor="green",style="filled",fontcolor="white"]
+  RE -> {KW; QB; WF; XT; IF}
+  QF [label="QF, rate=0"]
+  QF -> {PL; JF}
+  QB [label="QB, rate=0"]
+  QB -> {SP; RE}
+  VI [label="VI, rate=0"]
+  VI -> {EB; AA}
+  OK [label="OK, rate=0"]
+  OK -> {BF; QH}
+  BF [label="BF, rate=18",fillcolor="green",style="filled",fontcolor="white"]
+  BF -> {SX; VB; OK; OH}
+  QH [label="QH, rate=20",fillcolor="green",style="filled",fontcolor="white"]
+  QH -> {SO; WW; OK}
+  XT [label="XT, rate=0"]
+  XT -> {RE; OQ}
+  SO [label="SO, rate=0"]
+  SO -> {QH; SZ}
+  XF [label="XF, rate=22",fillcolor="green",style="filled",fontcolor="white"]
+  XF -> {TE; SP; NY; KD}
+  OH [label="OH, rate=0"]
+  OH -> {BF; KJ}
+  TT [label="TT, rate=0"]
+  TT -> {YV; YI}
+  OQ [label="OQ, rate=0"]
+  OQ -> {AA; XT}
+  HB [label="HB, rate=15",fillcolor="green",style="filled",fontcolor="white"]
+  HB -> {OM}
+  IY [label="IY, rate=14",fillcolor="green",style="filled",fontcolor="white"]
+  IY -> {UY; LW; UH; KW; BN}
+  ZB [label="ZB, rate=8",fillcolor="green",style="filled",fontcolor="white"]
+  ZB -> {SX}
+  UK [label="UK, rate=0"]
+  UK -> {AA; UY}
+  OM [label="OM, rate=0"]
+  OM -> {NY; HB}
+  UC [label="UC, rate=0"]
+  UC -> {YV; SC}
+  JG [label="JG, rate=10",fillcolor="green",style="filled",fontcolor="white"]
+  JG -> {YZ; SI; PL; KJ}
+  FL [label="FL, rate=0"]
+  FL -> {BN; LZ}
+  IF [label="IF, rate=0"]
+  IF -> {EB; RE}
+  LZ [label="LZ, rate=5",fillcolor="green",style="filled",fontcolor="white"]
+  LZ -> {FL; WF; SC; RT; RL}
+  JF [label="JF, rate=19",fillcolor="green",style="filled",fontcolor="white"]
+  JF -> {QF; AD; VL; RV; HW}
+  RL [label="RL, rate=0"]
+  RL -> {DQ; LZ}
+  AD [label="AD, rate=0"]
+  AD -> {EB; JF}
+  DQ [label="DQ, rate=0"]
+  DQ -> {RL; EB}
+  IU [label="IU, rate=25",fillcolor="green",style="filled",fontcolor="white"]
+  IU -> {HE; HQ; RV}
+  VL [label="VL, rate=0"]
+  VL -> {JF; YV}
+  YZ [label="YZ, rate=0"]
+  YZ -> {WW; JG}
+  SI [label="SI, rate=0"]
+  SI -> {YX; JG}
+  SC [label="SC, rate=0"]
+  SC -> {LZ; UC}
+  CY [label="CY, rate=21",fillcolor="green",style="filled",fontcolor="white"]
+  CY -> {HW}
+  LW [label="LW, rate=0"]
+  LW -> {KD; IY}
+  NH [label="NH, rate=0"]
+  NH -> {YV; EB}
+  EB [label="EB, rate=7",fillcolor="green",style="filled",fontcolor="white"]
+  EB -> {NH; IF; VI; DQ; AD}
+  PL [label="PL, rate=0"]
+  PL -> {JG; QF}
+  WF [label="WF, rate=0"]
+  WF -> {LZ; RE}
+  UY [label="UY, rate=0"]
+  UY -> {UK; IY}
+  KJ [label="KJ, rate=0"]
+  KJ -> {OH; JG}
+  EN [label="EN, rate=0"]
+  EN -> {RT; AA}
+  RV [label="RV, rate=0"]
+  RV -> {IU; JF}
+  UH [label="UH, rate=0"]
+  UH -> {IY; HQ}
+  SX [label="SX, rate=0"]
+  SX -> {ZB; BF}
+  VB [label="VB, rate=0"]
+  VB -> {SZ; BF}
+  NY [label="NY, rate=0"]
+  NY -> {OM; XF}
+  KD [label="KD, rate=0"]
+  KD -> {XF; LW}
+  HE [label="HE, rate=0"]
+  HE -> {IU; TE}
+  HQ [label="HQ, rate=0"]
+  HQ -> {UH; IU}
+  YX [label="YX, rate=0"]
+  YX -> {SI; YV}
+  YI [label="YI, rate=0"]
+  YI -> {AA; TT}
+  SZ [label="SZ, rate=24",fillcolor="green",style="filled",fontcolor="white"]
+  SZ -> {SO; VB}
+  WW [label="WW, rate=0"]
+  WW -> {QH; YZ}
+  SP [label="SP, rate=0"]
+  SP -> {QB; XF}
+  AA [label="AA, rate=0"]
+  AA -> {YI; EN; VI; OQ; UK}
+  BN [label="BN, rate=0"]
+  BN -> {IY; FL}
+}
