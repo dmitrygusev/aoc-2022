@@ -177,35 +177,43 @@ impl<NA> Graph<NA> where NA: Clone {
 }
 
 pub fn print_graph_dot<NA>(graph: &Graph<NA>) where NA: Display, NA: Clone {
-    let buf = build_graph_dot(graph);
+    let buf = build_graph_dot(graph, |_| None);
+    println!("{}", buf);
+}
+
+pub fn print_graph_dot2<NA>(graph: &Graph<NA>, node_decorator: fn(&NA) -> Option<&str>) where NA: Display, NA: Clone {
+    let buf = build_graph_dot(graph, node_decorator);
     println!("{}", buf);
 }
 
 pub fn create_dot_file<NA>(graph: &Graph<NA>, filename: &str) where NA: Display, NA: Clone {
-    let buf = build_graph_dot(graph);
-    let mut file = File::create(filename).unwrap();
-    write!(file, "{}", buf);
+    create_dot_file2(graph, |_| None, filename);
 }
 
-fn build_graph_dot<NA>(graph: &Graph<NA>)  -> String where NA: Display, NA: Clone {
+pub fn create_dot_file2<NA>(graph: &Graph<NA>, node_decorator: fn(&NA) -> Option<&str>, filename: &str) where NA: Display, NA: Clone {
+    let buf = build_graph_dot(graph, node_decorator);
+    let mut file = File::create(filename).unwrap();
+    write!(file, "{}", buf).unwrap();
+}
+
+fn build_graph_dot<NA>(graph: &Graph<NA>, node_decorator: fn(&NA) -> Option<&str>) -> String where NA: Display, NA: Clone {
     let mut buf = String::new();
-    writeln!(buf, "digraph G {{");
+    writeln!(buf, "digraph G {{").unwrap();
     for node_id in graph.nodes.iter() {
-        let attr = match graph.node_attributes.get(node_id) {
-            Some(state) => state.to_string(),
-            None => String::from("")
+        let (attr, decoration) = match graph.node_attributes.get(node_id) {
+            Some(state) => (state.to_string(), node_decorator(state).unwrap_or("")),
+            None => (String::from(""), "")
         };
-        write!(buf, "  {0} [label=\"{0}, {1}\"{2}]\n", node_id, attr,
-               if attr.contains("rate=0") {""} else {",fillcolor=\"green\",style=\"filled\",fontcolor=\"white\""});
+        write!(buf, "  {0} [label=\"{0}, {1}\"{2}]\n", node_id, attr, decoration).unwrap();
         if let Some(to_nodes) = graph.edges_from.get(node_id) {
             if !to_nodes.is_empty() {
-                write!(buf, "  {} -> {{", node_id);
+                write!(buf, "  {} -> {{", node_id).unwrap();
                 write_node_ids(&mut buf, to_nodes);
-                writeln!(buf, "}}");
+                writeln!(buf, "}}").unwrap();
             }
         }
     }
-    write!(buf, "}}");
+    write!(buf, "}}").unwrap();
     buf
 }
 
@@ -217,7 +225,7 @@ fn write_node_ids(buf: &mut String, nodes: &HashSet<NodeId>) {
         } else if nodes.len() > 1 {
             write!(buf, "; ").unwrap();
         }
-        write!(buf, "{}", node_id);
+        write!(buf, "{}", node_id).unwrap();
     }
 }
 
