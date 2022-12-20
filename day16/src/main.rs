@@ -7,12 +7,53 @@ use regex::Regex;
 fn main() {
     assert_eq!(1651, solve1("test1").releasing_pressure);
     assert_eq!(1947, solve1("input1").releasing_pressure);
+
+    assert_eq!(1707, solve2("test1"));
+    assert_eq!(2556, solve2("input1"));
 }
 
 #[derive(Clone, Debug)]
 struct State {
     releasing_pressure: u32,
     segments: Vec<Vec<NodeId>>,
+}
+
+fn solve2(filename: &str) -> u32 {
+    let graph = parse_graph(filename);
+
+    let from = NodeId::from("AA");
+
+    let mut all_states = create_states(
+        &graph,
+        &vec![],
+        &from,
+        &HashSet::new(),
+        0,
+        26);
+
+    all_states.sort_by(|a, b| a.releasing_pressure.cmp(&b.releasing_pressure));
+
+    let mut max = 0;
+    for path1 in all_states.iter().rev() {
+        if let Some(path2) = complement(&all_states, flatten(&path1.segments)) {
+            let total_pressure = path1.releasing_pressure + path2.releasing_pressure;
+            if max < total_pressure {
+                max = total_pressure;
+            }
+        }
+    }
+
+    max
+}
+
+fn complement(all_states: &Vec<State>, flatten: HashSet<NodeId>) -> Option<&State> {
+    all_states
+        .iter()
+        .rev()
+        .find(|state|
+            state.segments.iter()
+                .find(|s| flatten.contains(s.first().unwrap()))
+                .is_none())
 }
 
 fn solve1(filename: &str) -> State {
@@ -27,13 +68,14 @@ fn solve1(filename: &str) -> State {
         &vec![],
         &from,
         &HashSet::new(),
-        0);
+        0,
+        30);
 
     all_states.sort_by(|a, b| a.releasing_pressure.cmp(&b.releasing_pressure));
 
     println!("{}", all_states.len());
 
-    let tail = &all_states[all_states.len()-2..];
+    let tail = &all_states[all_states.len() - 2..];
 
     println!("{:?}", tail);
 
@@ -65,7 +107,8 @@ fn create_states(graph: &Graph<Valve>,
                  path_to_from: &Vec<Vec<NodeId>>,
                  from: &NodeId,
                  exclude: &HashSet<NodeId>,
-                 previous_pressure_released: u32) -> Vec<State> {
+                 previous_pressure_released: u32,
+                 time_budget: u32) -> Vec<State> {
 
     // println!("from {:?} excluding {:?}", from, exclude);
 
@@ -77,18 +120,18 @@ fn create_states(graph: &Graph<Valve>,
         let attr = &graph.node_attributes[node_id];
         if attr.rate > 0 && !exclude.contains(node_id) {
             let path = get_path(&prev, node_id);
-            let mut path_segments =  Vec::new();
+            let mut path_segments = Vec::new();
             for p in path_to_from {
                 path_segments.push(p.clone());
             }
             path_segments.push(path);
-            let valves_visited = path_segments.iter().map(|p|p.len() as u32 - 1).sum::<u32>();
+            let valves_visited = path_segments.iter().map(|p| p.len() as u32 - 1).sum::<u32>();
             let valves_opened = path_segments.len() as u32;
             let time_spent = valves_visited + valves_opened;
-            if time_spent > 30 {
+            if time_spent > time_budget {
                 continue;
             }
-            let releasing_pressure = previous_pressure_released + attr.rate * (30 - time_spent);
+            let releasing_pressure = previous_pressure_released + attr.rate * (time_budget - time_spent);
 
             // println!("{}[{}], releasing_pressure={}, new_path_to_from={:?}",
             //          node_id, attr, releasing_pressure, path_segments);
@@ -109,7 +152,8 @@ fn create_states(graph: &Graph<Valve>,
                 &state.segments,
                 &state.segments.last().unwrap().first().unwrap(),
                 &flatten(&state.segments),
-                state.releasing_pressure
+                state.releasing_pressure,
+                time_budget,
             );
 
         for child_state in child_states {
@@ -127,12 +171,9 @@ fn create_states(graph: &Graph<Valve>,
 }
 
 fn flatten(segments: &Vec<Vec<NodeId>>) -> HashSet<NodeId> {
-    let mut set = HashSet::new();
-    for segment in segments {
-        set.insert(segment.first().unwrap().clone());
-        set.insert(segment.last().unwrap().clone());
-    }
-    set
+    segments.iter()
+        .map(|s| s.first().unwrap().clone())
+        .collect()
 }
 
 #[derive(Clone)]
