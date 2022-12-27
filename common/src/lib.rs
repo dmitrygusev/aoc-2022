@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::{Debug, Display, Formatter, Write};
 use std::fs::File;
 use std::io::Write as IoWrite;
+use std::ops::Add;
 
 pub struct Marker {
     pub visited: bool,
@@ -17,6 +18,13 @@ impl Display for Marker {
 pub struct Pos {
     pub row: i32,
     pub col: i32,
+}
+
+impl Add<Pos> for Pos {
+    type Output = Pos;
+    fn add(self, rhs: Pos) -> Self::Output {
+        Pos { row: self.row + rhs.row, col: self.col + rhs.col }
+    }
 }
 
 impl Display for Pos {
