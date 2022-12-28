@@ -262,12 +262,18 @@ pub fn dijkstra<NA>(graph: &Graph<NA>, start: &NodeId) -> (Dist, Prev) where NA:
 
         let u = queue.remove(min_index);
 
-        for d in graph.edges_to[&u].iter() {
-            if !queue.contains(&d) { continue; }
-            let alt = dist[&u] + 1;
-            if alt < dist[&d] {
-                dist.insert(d.clone(), alt);
-                prev.insert(d.clone(), u.clone());
+        if let Some(edges_to) = graph.edges_to.get(&u) {
+            for d in edges_to.iter() {
+                if !queue.contains(&d) { continue; }
+                let du = dist[&u];
+                if du == u32::MAX {
+                    continue;
+                }
+                let alt = du + 1;
+                if alt < dist[&d] {
+                    dist.insert(d.clone(), alt);
+                    prev.insert(d.clone(), u.clone());
+                }
             }
         }
     }
